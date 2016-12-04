@@ -39,6 +39,7 @@
     (org-wiki :location (recipe :fetcher github :repo "caiorss/org-wiki"))
     (ox-cv :location (recipe :fetcher github :repo "mylese/ox-cv"))
     (org-jira :location (recipe :fetcher github :repo "baohaojun/org-jira" :branch "restapi"))
+    (ox-jekyll-subtree :location (recipe :fetcher github :repo "Malabarba/ox-jekyll-subtree"))
     calfw
     org-gcal
     ))
