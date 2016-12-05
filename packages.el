@@ -157,6 +157,9 @@
                   christian-holidays holiday-solar-holidays))
     ))
 
+; (defun fishman/init-ox-jekyll-subtree ()
+;   (use-package ox-jekyll-subtree))
+
 (defun fishman/init-org-gcal ()
   (use-package org-gcal
     :config
