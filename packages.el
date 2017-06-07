@@ -35,13 +35,18 @@
     mpv
     ; (mpv :location local)
     ;; org-glossary
+    ;; (org-glossary :location (recipe :fetcher github :repo "jagrg/org-glossary"))
     ;; org-ref
+    ;; org-eww
+    eww-lnum
     (org-wiki :location (recipe :fetcher github :repo "caiorss/org-wiki"))
     (ox-cv :location (recipe :fetcher github :repo "mylese/ox-cv"))
     (org-jira :location (recipe :fetcher github :repo "baohaojun/org-jira" :branch "restapi"))
     (ox-jekyll-subtree :location (recipe :fetcher github :repo "Malabarba/ox-jekyll-subtree"))
     calfw
     org-gcal
+    (org-journal :toggle org-enable-org-journal-support)
+    hackernews
     ))
 
 (defvar fishman-excluded-packages '() "List of packages to exclude.")
@@ -52,8 +57,8 @@
 ;; (defun fishman/init-org-ref ()
   ;; (use-package org-ref))
 
-(defun fishman/init-org-glossary ()
-  (use-package org-glossary))
+;; (defun fishman/init-org-glossary ()
+;;   (use-package org-glossary))
 
 (defun fishman/init-org-wiki ()
   (use-package org-wiki))
@@ -116,7 +121,6 @@
     (require 'calfw-ical)
     (setq calendar-week-start-day 1)
     (setq mark-diary-entries-in-calendar t)
-    (setq diary-entry-marker (quote diary-face))
     (setq european-calendar-style 't)
     (setq calendar-latitude 53.55)
     (setq calendar-longitude 9.99)
@@ -165,4 +169,68 @@
     :config
     (defun org-gcal--notify (title mes)
       (message "org-gcal::%s - %s" title mes))))
+
+(defun fishman/init-org-journal ()
+  (use-package org-journal
+    :defer t
+    :commands (org-journal-new-entry org-journal-search-forever)
+    :init
+    (progn
+      (spacemacs/declare-prefix "aoj" "org-journal")
+      (spacemacs/set-leader-keys
+        "aojj" 'org-journal-new-entry
+        "aojs" 'org-journal-search-forever)
+
+      (spacemacs/set-leader-keys-for-major-mode 'calendar-mode
+        "r" 'org-journal-read-entry
+        "i" 'org-journal-new-date-entry
+        "n" 'org-journal-next-entry
+        "p" 'org-journal-previous-entry
+        "s" 'org-journal-search-forever
+        "w" 'org-journal-search-calendar-week
+        "m" 'org-journal-search-calendar-month
+        "y" 'org-journal-search-calendar-year)
+
+      (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
+        "j" 'org-journal-new-entry
+        "n" 'org-journal-open-next-entry
+        "p" 'org-journal-open-previous-entry))))
+
+(defun fishman/init-eww-lnum ()
+  (use-package eww-lnum)
+  (use-package org-eww
+    :init
+    (progn
+      ;; (spacemacs/declare-prefix "ab" "eww")
+      (spacemacs/set-leader-keys
+        "ab" 'eww)
+      ;; keybindings are exactly the same as in vimperator unless otherwise stated
+      (evil-define-key 'normal eww-mode-map
+        "&" 'eww-browse-with-external-browser ;; default in eww-mode
+        "a" 'eww-add-bookmark
+        "yy" 'eww-copy-page-url
+        "f" 'eww-lnum-follow
+        "F" 'eww-lnum-universal ;; in vimperator open new tab
+        "gu" 'eww-up-url
+        "gt" 'eww-top-url
+        "f" 'eww-lnum-follow
+        "F" 'eww-lnum-universal
+        "h" 'eww-back-url ;; H in vimperator, because h is :help, but I think lowercase is better for us
+        "l" 'eww-forward-url ;; in vimperator, L is used for consistency, but again I think lower case is nicer for us
+        "r" 'eww-reload
+        "]]" 'eww-next-url
+        "[[" 'eww-previous-url
+        )
+      (spacemacs/set-leader-keys-for-major-mode 'eww-mode
+        "h"     'eww-list-histories
+        "ba"    'eww-add-bookmark ;; also "a" in normal state
+        "bb"    'eww-list-bookmarks
+        "s"     'eww-view-source
+        "c"     'url-cookie-list)
+     ))
+  )
+
+(defun fishman/init-hackernews ()
+  (use-package hackernews))
 ;;; packages.el ends here
+
