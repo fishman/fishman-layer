@@ -31,23 +31,27 @@
 
 (defconst fishman-packages
   '(
-    names
-    mpv
-    ; (mpv :location local)
-    ;; org-glossary
-    ;; (org-glossary :location (recipe :fetcher github :repo "jagrg/org-glossary"))
-    ;; org-ref
-    ;; org-eww
-    eww-lnum
-    (org-wiki :location (recipe :fetcher github :repo "caiorss/org-wiki"))
-    (ox-cv :location (recipe :fetcher github :repo "mylese/ox-cv"))
-    (org-jira :location (recipe :fetcher github :repo "baohaojun/org-jira" :branch "restapi"))
-    (ox-jekyll-subtree :location (recipe :fetcher github :repo "Malabarba/ox-jekyll-subtree"))
-    calfw
-    org-gcal
-    (org-journal :toggle org-enable-org-journal-support)
-    hackernews
-    ))
+     names
+     mpv
+     pocket-reader
+     ;; (mpv :location local)
+     ;; (org-ref :location (recipe :fetcher github :repo "jkitchin/org-ref"))
+     ;; org-ref
+     ;;    org-glossary
+     (org-wiki :location (recipe :fetcher github :repo "caiorss/org-wiki"))
+     (ox-cv :location (recipe :fetcher github :repo "mylese/ox-cv"))
+     ;; (org-jira :location (recipe :fetcher github :repo "ahungry/org-jira"))
+     calfw
+     org-gcal
+     ;; (org-glossary :location (recipe :fetcher github :repo "jagrg/org-glossary"))
+     org-eww
+     eww-lnum
+     (ox-jekyll-subtree :location (recipe :fetcher github :repo "Malabarba/ox-jekyll-subtree"))
+     calfw
+     org-gcal
+     ;; (org-journal :toggle org-enable-org-journal-support)
+     hackernews
+     ))
 
 (defvar fishman-excluded-packages '() "List of packages to exclude.")
 
@@ -101,7 +105,7 @@
         "jig" 'org-jira-get-issues
         "jih" 'org-jira-get-issues-headonly
         "jif" 'org-jira-get-issues-from-filter-headonly
-        "jiF" 'org-jira-get-issues-from-filter
+
         "jiu" 'org-jira-update-issue
         "jiw" 'org-jira-progress-issue
         "jir" 'org-jira-refresh-issue
@@ -116,9 +120,6 @@
 (defun fishman/init-calfw ()
   (use-package calfw
     :init
-    (require 'calfw-org)
-    (require 'calfw-cal)
-    (require 'calfw-ical)
     (setq calendar-week-start-day 1)
     (setq mark-diary-entries-in-calendar t)
     (setq european-calendar-style 't)
@@ -159,7 +160,12 @@
     (setq calendar-holidays
           (append general-holidays holiday-other-holidays holiday-local-holidays
                   christian-holidays holiday-solar-holidays))
-    ))
+    ;; (with-eval-after-load 'org
+    ;;   (require 'calfw-org)
+    ;;   (require 'calfw-cal)
+    ;;   (require 'calfw-ical)))
+
+  ))
 
 ; (defun fishman/init-ox-jekyll-subtree ()
 ;   (use-package ox-jekyll-subtree))
@@ -170,31 +176,31 @@
     (defun org-gcal--notify (title mes)
       (message "org-gcal::%s - %s" title mes))))
 
-(defun fishman/init-org-journal ()
-  (use-package org-journal
-    :defer t
-    :commands (org-journal-new-entry org-journal-search-forever)
-    :init
-    (progn
-      (spacemacs/declare-prefix "aoj" "org-journal")
-      (spacemacs/set-leader-keys
-        "aojj" 'org-journal-new-entry
-        "aojs" 'org-journal-search-forever)
+;; (defun fishman/init-org-journal ()
+;;   (use-package org-journal
+;;     :defer t
+;;     :commands (org-journal-new-entry org-journal-search-forever)
+;;     :init
+;;     (progn
+;;       (spacemacs/declare-prefix "aoj" "org-journal")
+;;       (spacemacs/set-leader-keys
+;;         "aojj" 'org-journal-new-entry
+;;         "aojs" 'org-journal-search-forever)
 
-      (spacemacs/set-leader-keys-for-major-mode 'calendar-mode
-        "r" 'org-journal-read-entry
-        "i" 'org-journal-new-date-entry
-        "n" 'org-journal-next-entry
-        "p" 'org-journal-previous-entry
-        "s" 'org-journal-search-forever
-        "w" 'org-journal-search-calendar-week
-        "m" 'org-journal-search-calendar-month
-        "y" 'org-journal-search-calendar-year)
+;;       (spacemacs/set-leader-keys-for-major-mode 'calendar-mode
+;;         "r" 'org-journal-read-entry
+;;         "i" 'org-journal-new-date-entry
+;;         "n" 'org-journal-next-entry
+;;         "p" 'org-journal-previous-entry
+;;         "s" 'org-journal-search-forever
+;;         "w" 'org-journal-search-calendar-week
+;;         "m" 'org-journal-search-calendar-month
+;;         "y" 'org-journal-search-calendar-year)
 
-      (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
-        "j" 'org-journal-new-entry
-        "n" 'org-journal-open-next-entry
-        "p" 'org-journal-open-previous-entry))))
+;;       (spacemacs/set-leader-keys-for-major-mode 'org-journal-mode
+;;         "j" 'org-journal-new-entry
+;;         "n" 'org-journal-open-next-entry
+;;         "p" 'org-journal-open-previous-entry))))
 
 (defun fishman/init-eww-lnum ()
   (use-package eww-lnum)
@@ -232,5 +238,16 @@
 
 (defun fishman/init-hackernews ()
   (use-package hackernews))
-;;; packages.el ends here
 
+(defun fishman/init-pocket-reader ()
+  (use-package pocket-reader
+    :init
+    (progn
+      ;; (spacemacs/set-leader-keys-for-major-mode 'pocket-reader-mode
+      (evil-define-key 'normal pocket-reader-mode-map
+        "O"   'pocket-reader-open-in-external-browser
+        "q"   'quit-window
+        "o"   'pocket-reader-open-url)
+      ))
+  )
+;;; packages.el ends here
