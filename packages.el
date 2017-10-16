@@ -49,6 +49,8 @@
      (ox-jekyll-subtree :location (recipe :fetcher github :repo "Malabarba/ox-jekyll-subtree"))
      calfw
      org-gcal
+     (org-protocol-capture-html :location (recipe :fetcher github
+                                            :repo fishman/org-protocol-capture-html))
      ;; (org-journal :toggle org-enable-org-journal-support)
      hackernews
      ))
@@ -245,9 +247,40 @@
     (progn
       ;; (spacemacs/set-leader-keys-for-major-mode 'pocket-reader-mode
       (evil-define-key 'normal pocket-reader-mode-map
+        "a"   'pocket-reader-add-tags
+        "s"   'pocket-reader-set-tags
         "O"   'pocket-reader-open-in-external-browser
         "q"   'quit-window
         "o"   'pocket-reader-open-url)
       ))
   )
+
+
+;; (defun org-protocol--capture-url (info)
+;;   (interactive)
+;;   (let ((capture-url-functions nil))
+;;     ;; The `parse-url' functions break on the embedded url,
+;;     ;; since our format is fixed we'll split the url ourselves.
+;;     (if (string-match  "^\\([^:]*\\):\\(/*\\)\\(.*\\)" info)
+;;       (let* ((b (get-buffer-create "*org-ann*"))
+;;               (proto (match-string 1 info))
+;;               (url_title_region (match-string 3 info))
+;;               (splitparts (split-string url_title_region "::capture-url::"))
+;;   )
+
+(defun fishman/init-org-protocol-capture-html ()
+  (use-package org-protocol)
+  (use-package org-protocol-capture-html
+    :init
+    (progn
+      (require 'org-protocol)
+      (require 'org-protocol-capture-html)
+      ;; (add-to-list 'org-protocol-protocol-alist
+      ;;   '("capture-html"
+      ;;      :protocol "capture-html"
+      ;;      :function org-
+      ;;      :kill-client t))
+      ))
+  )
+;; (require 'org-protocol-capture-html)
 ;;; packages.el ends here
